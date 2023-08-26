@@ -1,0 +1,16 @@
+{
+  "name": "kiosk",
+  "version": "1.0.0",
+  "description": "kiosk dashboard base template",
+  "main": "html/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "peccu",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.2.2"
+  }
+}
