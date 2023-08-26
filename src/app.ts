@@ -118,7 +118,7 @@ class Tab {
   }
   tabActivate(id: string) {
     [...this.dom.querySelectorAll('a')].map(e => e.classList.remove('active'))
-    this.dom.querySelector(`a[href="#${id}"]`).classList.add('active')
+    this.dom.querySelector(`a[href="#${id}"]`)!.classList.add('active')
   }
   loadCurrentPage() {
     this.pages[this.currentPage].loadFrames()
