@@ -36,7 +36,8 @@ type pageConf = {
   title: string,
   name: string,
   columns: string,
-  areas: string[]
+  areas: string[],
+  frames: frameConf[]
 }
 class Page {
   frames: Frame[]
@@ -72,25 +73,28 @@ class Page {
   }
 }
 class Tab {
-  constructor(){
+  pages: { [key: string]: Page }
+  currentPage: string
+  dom: HTMLElement
+  constructor() {
     this.pages = {}
     this.currentPage = ''
     this.dom = this.createTab()
     this.addLoad()
   }
-  createTab(){
+  createTab() {
     const tab = document.createElement('div')
     tab.classList.add('tab')
     return tab
   }
-  addLoad(){
+  addLoad() {
     const link = document.createElement('a')
     link.href = `#`
     link.onclick = () => this.loadCurrentPage()
     link.innerText = 'load'
     this.addLink(link)
   }
-  addPage(page){
+  addPage(page: Page) {
     this.pages[page.name] = page
     const link = document.createElement('a')
     link.href = `#${page.name}`
@@ -99,40 +103,41 @@ class Tab {
     this.addLink(link)
     document.body.appendChild(page.dom)
   }
-  addLink(anchor){
+  addLink(anchor: HTMLAnchorElement) {
     this.dom.appendChild(anchor)
   }
-  switchpage(id){
+  switchpage(id: string) {
     this.currentPage = id;
     this.tabActivate(id)
     this.#pages()
-      .filter(e=>e.name!==id)
-      .map(e=>e.hide())
+      .filter(e => e.name !== id)
+      .map(e => e.hide())
     this.pages[id].show()
     this.loadCurrentPage()
     return false
   }
-  tabActivate(id){
-    [...this.dom.querySelectorAll('a')].map(e=>e.classList.remove('active'))
+  tabActivate(id: string) {
+    [...this.dom.querySelectorAll('a')].map(e => e.classList.remove('active'))
     this.dom.querySelector(`a[href="#${id}"]`).classList.add('active')
   }
-  loadCurrentPage(){
+  loadCurrentPage() {
     this.pages[this.currentPage].loadFrames()
   }
-  #pages(){
+  #pages() {
     return Object.keys(this.pages)
-      .map(e=>this.pages[e])
+      .map(e => this.pages[e])
   }
-  importPages(pages){
+  importPages(pages: Config) {
     const that = this
     this.currentPage = pages[0].name
-    pages.map(p=>{
+    pages.map(p => {
       const page = new Page(p)
       that.addPage(page)
-      p.frames.map(f=>page.addFrame(new Frame(f)))
+      p.frames.map(f => page.addFrame(new Frame(f)))
     })
   }
 }
+type Config = pageConf[]
 window.onload = async () => {
   const tab = new Tab()
   document.body.appendChild(tab.dom)
