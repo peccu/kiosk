@@ -32,6 +32,7 @@ class Frame {
     this.dom = iframe
   }
 }
+
 type pageConf = {
   title: string,
   name: string,
@@ -72,6 +73,7 @@ class Page {
     this.dom.style.display = 'grid'
   }
 }
+
 class Tab {
   pages: { [key: string]: Page }
   currentPage: string
@@ -123,26 +125,41 @@ class Tab {
   loadCurrentPage() {
     this.pages[this.currentPage].loadFrames()
   }
+  mount(target: HTMLElement) {
+    target.appendChild(this.dom)
+  }
   #pages() {
     return Object.keys(this.pages)
       .map(e => this.pages[e])
   }
+}
+
+type Config = pageConf[]
+
+class App {
+  tab: Tab
+  pages: Config
+  constructor(pages: Config) {
+    this.tab = new Tab()
+    this.pages = pages
+  }
   importPages(pages: Config) {
-    const that = this
-    this.currentPage = pages[0].name
     pages.map(p => {
       const page = new Page(p)
-      that.addPage(page)
+      this.tab.addPage(page)
       p.frames.map(f => page.addFrame(new Frame(f)))
     })
   }
+  start(target: HTMLElement) {
+    this.tab.mount(target)
+    this.importPages(this.pages)
+    this.tab.switchpage(this.pages[0].name)
+  }
 }
-type Config = pageConf[]
+
 window.onload = async () => {
-  const tab = new Tab()
-  document.body.appendChild(tab.dom)
   const json = await fetch('pages.json')
   const pages = await json.json()
-  tab.importPages(pages)
-  tab.switchpage(tab.currentPage)
+  const app = new App(pages)
+  app.start(document.body)
 }
