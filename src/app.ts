@@ -32,14 +32,24 @@ class Frame {
     this.dom = iframe
   }
 }
+type pageConf = {
+  title: string,
+  name: string,
+  columns: string,
+  areas: string[]
+}
 class Page {
-  constructor({title, name, columns, areas}){
+  frames: Frame[]
+  title: string
+  name: string
+  dom: HTMLElement
+  constructor(conf: pageConf) {
     this.frames = []
-    this.title = title
-    this.name = name
-    this.dom = this.createPage(columns, areas.join(' '))
+    this.title = conf.title
+    this.name = conf.name
+    this.dom = this.createPage(conf.columns, conf.areas.join(' '))
   }
-  createPage(columns, areas){
+  createPage(columns: string, areas: string) {
     const page = document.createElement('div')
     page.id = this.name
     page.classList.add('page')
@@ -47,17 +57,17 @@ class Page {
     page.style.gridTemplateAreas = areas
     return page
   }
-  addFrame(frame){
+  addFrame(frame: Frame) {
     this.frames.push(frame)
     this.dom.appendChild(frame.dom)
   }
-  loadFrames(){
-    this.frames.map(e=>e.load())
+  loadFrames() {
+    this.frames.map(e => e.load())
   }
-  hide(){
+  hide() {
     this.dom.style.display = 'none'
   }
-  show(){
+  show() {
     this.dom.style.display = 'grid'
   }
 }
