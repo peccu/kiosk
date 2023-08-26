@@ -1,25 +1,32 @@
+type frameConf = {
+  name: string,
+  src: string
+}
 class Frame {
-  constructor({name, src}){
-    this.name = name
-    this.src = src
+  name: string
+  src: string
+  dom: HTMLElement
+  constructor(conf: frameConf) {
+    this.name = conf.name
+    this.src = conf.src
     this.dom = this.createPlaceholder()
   }
-  createdom(tag){
+  createdom(tag: string): HTMLElement {
     const dom = document.createElement(tag);
     ['frame', this.name].map(e => dom.classList.add(e))
     dom.style.gridArea = this.name
     return dom
   }
-  createPlaceholder(){
+  createPlaceholder() {
     const iframe = this.createdom('div')
     iframe.innerHTML = `Wait loading...<br/>Please click Load button!!`
     return iframe
   }
-  load(){
-    if(this.dom.tagName === 'IFRAME'){
+  load() {
+    if (this.dom.tagName === 'IFRAME') {
       return
     }
-    const iframe = this.createdom('iframe')
+    const iframe = this.createdom('iframe') as HTMLIFrameElement
     iframe.src = this.src
     this.dom.outerHTML = iframe.outerHTML
     this.dom = iframe
