@@ -31,6 +31,13 @@ class Frame {
     this.dom.outerHTML = iframe.outerHTML
     this.dom = iframe
   }
+  unload() {
+    if (this.dom.tagName !== 'IFRAME') {
+      return
+    }
+    document.querySelector(`iframe.${this.name}`)!.remove()
+    this.dom = this.createPlaceholder()
+  }
 }
 
 type pageConf = {
@@ -66,6 +73,13 @@ class Page {
   loadFrames() {
     this.frames.map(e => e.load())
   }
+  unloadFrames() {
+    const page = this
+    this.frames.map(e => {
+      e.unload()
+      page.dom.appendChild(e.dom)
+    })
+  }
   hide() {
     this.dom.style.display = 'none'
   }
@@ -83,6 +97,7 @@ class Tab {
     this.currentPage = ''
     this.dom = this.createTab()
     this.addLoad()
+    this.addUnLoad()
   }
   createTab() {
     const tab = document.createElement('div')
@@ -94,6 +109,13 @@ class Tab {
     link.href = `#`
     link.onclick = () => this.loadCurrentPage()
     link.innerText = 'load'
+    this.addLink(link)
+  }
+  addUnLoad() {
+    const link = document.createElement('a')
+    link.href = `#`
+    link.onclick = () => this.unloadCurrentPage()
+    link.innerText = 'unload'
     this.addLink(link)
   }
   addPage(page: Page) {
@@ -124,6 +146,9 @@ class Tab {
   }
   loadCurrentPage() {
     this.pages[this.currentPage].loadFrames()
+  }
+  unloadCurrentPage() {
+    this.pages[this.currentPage].unloadFrames()
   }
   mount(target: HTMLElement) {
     target.appendChild(this.dom)
