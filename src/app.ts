@@ -49,7 +49,7 @@ class Page {
     this.frames = []
     this.title = conf.title
     this.name = conf.name
-    this.dom = this.createPage(conf.columns, conf.areas.join(' '))
+    this.dom = this.createPage(conf.columns, `"${conf.areas.join('" "')}"`)
   }
   createPage(columns: string, areas: string) {
     const page = document.createElement('div')
