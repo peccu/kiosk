@@ -163,10 +163,17 @@ type Config = pageConf[]
 
 class App {
   tab: Tab
+  confpath: string
   pages: Config
-  constructor(pages: Config) {
+  constructor(path: string) {
     this.tab = new Tab()
-    this.pages = pages
+    this.confpath = path
+    this.pages = []
+  }
+  async loadConfig(){
+     const json = await fetch(this.confpath)
+  const pages = await json.json()
+  return pages
   }
   importPages(pages: Config) {
     pages.map(p => {
@@ -183,8 +190,7 @@ class App {
 }
 
 window.onload = async () => {
-  const json = await fetch('pages.json')
-  const pages = await json.json()
-  const app = new App(pages)
+  const app = new App('pages.json')
+  app.pages = await app.loadConfig()
   app.start(document.body)
 }
