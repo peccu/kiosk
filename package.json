@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
+    "format": "npx prettier . --write",
     "dev": "npx serve html",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

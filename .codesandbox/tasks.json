@@ -18,6 +18,11 @@
       "name": "Serve",
       "command": "npm run dev",
       "runAtStart": true
+    },
+    "npm run format": {
+      "name": "Prettier",
+      "command": "npm run format",
+      "runAtStart": true
     }
   }
 }
