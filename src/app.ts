@@ -158,7 +158,17 @@ class Tab {
   }
 }
 
-type Config = pageConf[]
+class Config {
+  pages: pageConf[]
+  constructor() {
+    this.pages = []
+  }
+  async loadConfig(confpath: string) {
+    const json = await fetch(confpath)
+    const pages = await json.json()
+    return pages
+  }
+}
 
 class App {
   tab: Tab
@@ -167,15 +177,13 @@ class App {
   constructor(path: string) {
     this.tab = new Tab()
     this.confpath = path
-    this.pages = []
+    this.pages = new Config()
   }
-  async loadConfig(){
-     const json = await fetch(this.confpath)
-  const pages = await json.json()
-  return pages
+  async loadConfig() {
+    return this.pages.loadConfig(this.confpath)
   }
   importPages(pages: Config) {
-    pages.map(p => {
+    pages.pages.map(p => {
       const page = new Page(p)
       this.tab.addPage(page)
       p.frames.map(f => page.addFrame(new Frame(f)))
@@ -184,7 +192,7 @@ class App {
   start(target: HTMLElement) {
     this.tab.mount(target)
     this.importPages(this.pages)
-    this.tab.switchpage(this.pages[0].name)
+    this.tab.switchpage(this.pages.pages[0].name)
   }
 }
 
