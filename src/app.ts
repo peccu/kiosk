@@ -1,5 +1,5 @@
 type frameConf = {
-  name: string,
+  name: string
   src: string
 }
 class Frame {
@@ -12,8 +12,8 @@ class Frame {
     this.dom = this.createPlaceholder()
   }
   createdom(tag: string): HTMLElement {
-    const dom = document.createElement(tag);
-    ['frame', this.name].map(e => dom.classList.add(e))
+    const dom = document.createElement(tag)
+    ;['frame', this.name].map(e => dom.classList.add(e))
     dom.style.gridArea = this.name
     return dom
   }
@@ -41,10 +41,10 @@ class Frame {
 }
 
 type pageConf = {
-  title: string,
-  name: string,
-  columns: string,
-  areas: string[],
+  title: string
+  name: string
+  columns: string
+  areas: string[]
   frames: frameConf[]
 }
 class Page {
@@ -131,7 +131,7 @@ class Tab {
     this.dom.appendChild(anchor)
   }
   switchpage(id: string) {
-    this.currentPage = id;
+    this.currentPage = id
     this.tabActivate(id)
     this.#pages()
       .filter(e => e.name !== id)
@@ -141,7 +141,7 @@ class Tab {
     return false
   }
   tabActivate(id: string) {
-    [...this.dom.querySelectorAll('a')].map(e => e.classList.remove('active'))
+    ;[...this.dom.querySelectorAll('a')].map(e => e.classList.remove('active'))
     this.dom.querySelector(`a[href="#${id}"]`)!.classList.add('active')
   }
   loadCurrentPage() {
@@ -154,8 +154,7 @@ class Tab {
     target.appendChild(this.dom)
   }
   #pages() {
-    return Object.keys(this.pages)
-      .map(e => this.pages[e])
+    return Object.keys(this.pages).map(e => this.pages[e])
   }
 }
 
@@ -163,10 +162,17 @@ type Config = pageConf[]
 
 class App {
   tab: Tab
+  confpath: string
   pages: Config
-  constructor(pages: Config) {
+  constructor(path: string) {
     this.tab = new Tab()
-    this.pages = pages
+    this.confpath = path
+    this.pages = []
+  }
+  async loadConfig(){
+     const json = await fetch(this.confpath)
+  const pages = await json.json()
+  return pages
   }
   importPages(pages: Config) {
     pages.map(p => {
@@ -183,8 +189,7 @@ class App {
 }
 
 window.onload = async () => {
-  const json = await fetch('pages.json')
-  const pages = await json.json()
-  const app = new App(pages)
+  const app = new App('pages.json')
+  app.pages = await app.loadConfig()
   app.start(document.body)
 }
