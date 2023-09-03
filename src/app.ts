@@ -197,7 +197,9 @@ class App {
 }
 
 window.onload = async () => {
-  const app = new App('pages.json')
+  const confInStorage = window.localStorage.getItem('conf')
+  const confpath = confInStorage ? confInStorage : 'pages.json'
+  const app = new App(confpath)
   app.pages = await app.loadConfig()
   app.start(document.body)
 }
