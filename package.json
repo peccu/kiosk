@@ -7,7 +7,7 @@
   "type": "module",
   "scripts": {
     "// build": "tsc",
-    "build": "npx parcel build src/*.html --dist-dir html",
+    "build": "npx parcel build src/*.html --dist-dir html --public-url .",
     "format": "npx prettier . --write",
     "// dev": "npx serve html",
     "dev": "npx parcel src/*.html --dist-dir html",
