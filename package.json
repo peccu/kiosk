@@ -16,6 +16,7 @@
   "author": "peccu",
   "license": "MIT",
   "devDependencies": {
+    "parcel": "^2.8.0",
     "typescript": "^5.2.2"
   }
 }
