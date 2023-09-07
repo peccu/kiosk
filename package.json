@@ -7,10 +7,10 @@
   "type": "module",
   "scripts": {
     "// build": "tsc",
-    "build": "npx parcel build src/index.html --dist-dir html",
+    "build": "npx parcel build src/*.html --dist-dir html",
     "format": "npx prettier . --write",
     "// dev": "npx serve html",
-    "dev": "npx parcel src/index.html --dist-dir html",
+    "dev": "npx parcel src/*.html --dist-dir html",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "peccu",
