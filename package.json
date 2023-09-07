@@ -2,12 +2,15 @@
   "name": "kiosk",
   "version": "1.0.0",
   "description": "kiosk dashboard base template",
-  "main": "html/index.js",
+  "// main": "html/index.js",
+  "source": "src/index.html",
   "type": "module",
   "scripts": {
-    "build": "tsc",
+    "// build": "tsc",
+    "build": "npx parcel build src/index.html --dist-dir html",
     "format": "npx prettier . --write",
-    "dev": "npx serve html",
+    "// dev": "npx serve html",
+    "dev": "npx parcel src/index.html --dist-dir html",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "peccu",
