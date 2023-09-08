@@ -1,6 +1,6 @@
 export module TypeGuard {
   // based on https://medium.com/@wujido20/runtime-types-in-typescript-5f74fc9dc6c4
-  type TypeGuard<T> = (val: unknown) => T;
+  type TypeGuard<T> = (val: unknown) => T
 
   const names = new Map()
   export const name = (inner: TypeGuard<any>): string => {
@@ -13,26 +13,28 @@ export module TypeGuard {
 
   export const string: TypeGuard<string> = (val: unknown) => {
     if (typeof val !== 'string') {
-      throw new Error(`should be string but ${typeof val}`);
+      throw new Error(`should be string but ${typeof val}`)
     }
-    return val;
+    return val
   }
   names.set(string, 'string')
 
   export const number: TypeGuard<number> = (val: unknown) => {
     if (typeof val !== 'number') {
-      throw new Error(`should be number but ${typeof val}`);
+      throw new Error(`should be number but ${typeof val}`)
     }
-    return val;
+    return val
   }
   names.set(number, 'number')
 
-  export const array = <T>(inner: TypeGuard<T>) => (val: unknown): T[] => {
-    if (!Array.isArray(val)) {
-      throw new Error(`should be array but ${typeof val}`);
+  export const array =
+    <T>(inner: TypeGuard<T>) =>
+    (val: unknown): T[] => {
+      if (!Array.isArray(val)) {
+        throw new Error(`should be array but ${typeof val}`)
+      }
+      return val.map(inner)
     }
-    return val.map(inner);
-  }
   names.set(array, 'array')
 
   // テスト対象T
@@ -41,12 +43,14 @@ export module TypeGuard {
   // 実際のオブジェクトはinner
   // valを引数にテスト後のオブジェクトを返す関数を返している。
   // innerが型定義、再起的に型定義を呼び出した結果をoutにつめて返している
-  export const object = <T extends Record<string, TypeGuard<any>>>(inner: T) => {
+  export const object = <T extends Record<string, TypeGuard<any>>>(
+    inner: T,
+  ) => {
     return (val: unknown): { [P in keyof T]: ReturnType<T[P]> } => {
       if (val === null || typeof val !== 'object') {
-        throw new Error(`should be object but ${typeof val}`);
+        throw new Error(`should be object but ${typeof val}`)
       }
-      const out: { [P in keyof T]: ReturnType<T[P]> } = {} as any;
+      const out: { [P in keyof T]: ReturnType<T[P]> } = {} as any
       for (const k in inner) {
         try {
           // nullable parameter?
@@ -62,7 +66,7 @@ export module TypeGuard {
         } catch (e) {
           // TODO ネストしてた場合にメッセージが冗長なので、エラーオブジェクトを作って結合する必要ある。
           // a.b.c shoud be XXX のような
-          throw new Error(`some error in key:${k} val:${val}. orig:${e}`);
+          throw new Error(`some error in key:${k} val:${val}. orig:${e}`)
         }
       }
       return out
@@ -72,29 +76,34 @@ export module TypeGuard {
 
   export const undefined = (val: unknown) => {
     if (typeof val !== 'undefined') {
-      throw new Error(`should be undefined but ${typeof val}`);
+      throw new Error(`should be undefined but ${typeof val}`)
     }
-    return val;
+    return val
   }
   names.set(undefined, 'undefined')
 
-  export const union = (inner: TypeGuard<any>[]) => (val: unknown): TypeGuard<any> => {
-    if (!Array.isArray(inner)) {
-      throw new Error(`internal error. argument of union shoud be array but ${typeof inner}`);
-    }
-    for (const k in inner) {
-      try {
-        return inner[k](val) as any
-      } catch (e) {
+  export const union =
+    (inner: TypeGuard<any>[]) =>
+    (val: unknown): TypeGuard<any> => {
+      if (!Array.isArray(inner)) {
+        throw new Error(
+          `internal error. argument of union shoud be array but ${typeof inner}`,
+        )
       }
+      for (const k in inner) {
+        try {
+          return inner[k](val) as any
+        } catch (e) {}
+      }
+      throw new Error(`should be ${inner.map(name).join('|')}`)
     }
-    throw new Error(`should be ${inner.map(name).join('|')}`)
-  }
   names.set(union, 'union')
 
-  export const optional = (inner: TypeGuard<any>) => (val: unknown): TypeGuard<any> => {
-    return union([undefined, inner])(val)
-  }
+  export const optional =
+    (inner: TypeGuard<any>) =>
+    (val: unknown): TypeGuard<any> => {
+      return union([undefined, inner])(val)
+    }
   names.set(optional, 'optional')
 }
 

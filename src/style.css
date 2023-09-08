@@ -12,7 +12,10 @@ html {
   transform: scale(calc(1 / var(--scale)), calc(1 / var(--scale)));
   transform-origin: top left;
 }
-html, body, .page, .frame {
+html,
+body,
+.page,
+.frame {
   overflow: hidden;
 }
 .tab {

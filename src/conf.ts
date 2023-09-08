@@ -17,7 +17,7 @@ export module Conf {
   const BufferConf = t.object({
     id: BufferId,
     uri: t.string,
-    content: t.optional(t.string)
+    content: t.optional(t.string),
   })
   export type BufferConf = ReturnType<typeof BufferConf>
 
@@ -26,7 +26,7 @@ export module Conf {
     screenId: ScreenId,
     name: t.optional(t.string),
     mode: t.optional(t.string),
-    bufferId: t.optional(BufferId)
+    bufferId: t.optional(BufferId),
   })
   export type WindowConf = ReturnType<typeof WindowConf>
 
@@ -34,15 +34,16 @@ export module Conf {
     id: ScreenId,
     frameId: FrameId,
     name: t.optional(t.string),
+    title: t.optional(t.string),
     columns: ColumnConf,
-    areas: AreasConf
+    areas: AreasConf,
   })
   export type ScreenConf = ReturnType<typeof ScreenConf>
 
   const FrameConf = t.object({
     id: FrameId,
     position: t.optional(t.string),
-    activeScreen: ScreenId
+    activeScreen: ScreenId,
   })
   export type FrameConf = ReturnType<typeof FrameConf>
 
@@ -50,7 +51,7 @@ export module Conf {
     frames: t.array(FrameConf),
     screens: t.array(ScreenConf),
     windows: t.array(WindowConf),
-    buffers: t.array(BufferConf)
+    buffers: t.array(BufferConf),
   })
   export type AppConf = ReturnType<typeof AppConf>
 
