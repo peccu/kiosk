@@ -1,3 +1,5 @@
+import Conf from './conf'
+
 type frameConf = {
   name: string
   src: string
@@ -180,6 +182,9 @@ class App {
     this.pages = new Config()
   }
   async loadConfig() {
+    const conf = new Conf.ConfigLoader(this.confpath)
+    const c = await conf.loadConfig()
+    console.log('loaded config', c)
     return this.pages.loadConfig(this.confpath)
   }
   importPages(pages: Config) {
