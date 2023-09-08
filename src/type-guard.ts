@@ -11,6 +11,14 @@ export module TypeGuard {
     return 'other'
   }
 
+  export const boolean: TypeGuard<boolean> = (val: unknown) => {
+    if (typeof val !== 'boolean') {
+      throw new Error(`should be boolean but ${typeof val}`)
+    }
+    return val
+  }
+  names.set(boolean, 'boolean')
+
   export const string: TypeGuard<string> = (val: unknown) => {
     if (typeof val !== 'string') {
       throw new Error(`should be string but ${typeof val}`)

@@ -17,6 +17,7 @@ export module Conf {
   const BufferConf = t.object({
     id: BufferId,
     uri: t.string,
+    useProxy: t.optional(t.boolean),
     content: t.optional(t.string),
   })
   export type BufferConf = ReturnType<typeof BufferConf>
