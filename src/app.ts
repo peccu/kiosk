@@ -4,7 +4,7 @@ type frameConf = {
   name: string
   src: string
 }
-class Frame {
+class Framer {
   name: string
   src: string
   dom: HTMLElement
@@ -169,6 +169,34 @@ class Config {
     const json = await fetch(confpath)
     const pages = await json.json()
     return pages
+  }
+}
+
+class Buffer {
+  conf: Conf.BufferConf
+  constructor(conf: Conf.BufferConf) {
+    this.conf = conf
+  }
+}
+
+class Window {
+  conf: Conf.WindowConf
+  constructor(conf: Conf.WindowConf) {
+    this.conf = conf
+  }
+}
+
+class Screen {
+  conf: Conf.ScreenConf
+  constructor(conf: Conf.ScreenConf) {
+    this.conf = conf
+  }
+}
+
+class Frame {
+  conf: Conf.FrameConf
+  constructor(conf: Conf.FrameConf) {
+    this.conf = conf
   }
 }
 
