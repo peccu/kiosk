@@ -197,6 +197,18 @@ class Frame {
   conf: Conf.FrameConf
   constructor(conf: Conf.FrameConf) {
     this.conf = conf
+    // TODO if need, create window.open()
+    // window.open(url, target, feature, window)
+    // window.open("", conf.id, null, window)
+    // call self index.html with frameid?
+    // switch screen with it
+  }
+  importPages(pages: Config) {
+    pages.pages.map(p => {
+      const page = new Page(p)
+      this.tab.addPage(page)
+      p.frames.map(f => page.addFrame(new Frame(f)))
+    })
   }
 }
 
@@ -215,6 +227,11 @@ class App {
     this.windows = []
     this.buffers = []
   }
+  parseParam() {
+    // debugger
+    // parse hash or qury parameter for restore active
+    // and support multi frame (window)
+  }
   async loadConfig() {
     console.log('loading: ', this.confpath)
     const loader = new Conf.ConfigLoader(this.confpath)
@@ -223,10 +240,24 @@ class App {
     return this.conf
   }
   start(target: HTMLElement) {
+    // setup frames
+    this.frames = this.conf.frames.map((e) => new Frame(e))
+    // setup screens
+    this.screens = this.conf.screens.map((e) => new Screen(e))
+    // setup windows
+    this.windows = this.conf.windows.map((e) => new Window(e))
+    // setup buffers
+    this.buffers = this.conf.buffers.map((e) => new Buffer(e))
+    // this.tab.mount(target)
+    // this.importPages(this.conf)
+    // this.tab.switchpage(this.conf.pages[0].name)
   }
 }
 
 window.onload = async () => {
+  // const demo = Conf.demo
+  // console.log('demo conf', demo)
+  // console.log(JSON.stringify(demo, null, 2))
   const confInStorage = window.localStorage.getItem('conf')
   const confpath = confInStorage ? confInStorage : 'pages.json'
   const app = new App(confpath)
