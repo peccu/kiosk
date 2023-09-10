@@ -201,31 +201,28 @@ class Frame {
 }
 
 class App {
-  tab: Tab
+  frames: Frame[]
+  screens: Screen[]
+  windows: Window[]
+  buffers: Buffer[]
   confpath: string
-  pages: Config
+  conf: Conf.AppConf
   constructor(path: string) {
-    this.tab = new Tab()
     this.confpath = path
-    this.pages = new Config()
+    this.conf = {} as Conf.AppConf
+    this.frames = []
+    this.screens = []
+    this.windows = []
+    this.buffers = []
   }
   async loadConfig() {
-    const conf = new Conf.ConfigLoader(this.confpath)
-    const c = await conf.loadConfig()
-    console.log('loaded config', c)
-    return this.pages.loadConfig(this.confpath)
-  }
-  importPages(pages: Config) {
-    pages.pages.map(p => {
-      const page = new Page(p)
-      this.tab.addPage(page)
-      p.frames.map(f => page.addFrame(new Frame(f)))
-    })
+    console.log('loading: ', this.confpath)
+    const loader = new Conf.ConfigLoader(this.confpath)
+    this.conf = await loader.loadConfig()
+    console.log('loaded config', this.conf)
+    return this.conf
   }
   start(target: HTMLElement) {
-    this.tab.mount(target)
-    this.importPages(this.pages)
-    this.tab.switchpage(this.pages.pages[0].name)
   }
 }
 
@@ -233,6 +230,6 @@ window.onload = async () => {
   const confInStorage = window.localStorage.getItem('conf')
   const confpath = confInStorage ? confInStorage : 'pages.json'
   const app = new App(confpath)
-  app.pages = await app.loadConfig()
+  await app.loadConfig()
   app.start(document.body)
 }
