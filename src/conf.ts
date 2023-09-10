@@ -62,7 +62,6 @@ export module Conf {
       this.path = path
     }
     async loadConfig() {
-      console.log('loading: ', this.path)
       let conf
       try {
         const json = await fetch(this.path)
@@ -75,7 +74,6 @@ export module Conf {
       }
       const result = AppConf(conf)
       // console.log(PathReporter.report(result))
-      console.log(result.buffers)
       return result
     }
   }
